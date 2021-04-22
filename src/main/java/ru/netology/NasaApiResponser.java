@@ -7,11 +7,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
 
 import static com.fasterxml.jackson.core.JsonParser.*;
 
@@ -36,10 +32,10 @@ public class NasaApiResponser {
                 System.out.println(nasaApi);
                 String url = nasaApi.getUrl();
                 response = httpClient.execute(new HttpGet(url));
-                String bodyOfUrlResponse = new String(response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8);
+                byte[] bodyOfUrlResponse = response.getEntity().getContent().readAllBytes();
                 String[] urlStringArray = url.split("/");
                 String pictureName = urlStringArray[urlStringArray.length - 1];
-                BufferedWriter writer = new BufferedWriter(new FileWriter(new File(pictureName)));
+                FileOutputStream writer = new FileOutputStream(new File(pictureName));
                 writer.write(bodyOfUrlResponse);
                 writer.close();
             } finally {
